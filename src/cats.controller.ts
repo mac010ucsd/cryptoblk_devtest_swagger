@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body} from '@nestjs/common';
 import { AppService } from './app.service';
-import { transfer_dto } from './transfer_dto' ;
+import { transfer_dto, mint_dto } from './transfer_dto' ;
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('tokens')
@@ -9,7 +9,7 @@ export class MintController {
 	constructor(private readonly appService: AppService) {}
 
 	@Post()
-	doMint(@Body() payload: transfer_dto) {
+	doMint(@Body() payload: mint_dto) {
 		console.log("a");
 		this.appService.mint(payload.mnemonic, payload.value);
 	}

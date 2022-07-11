@@ -9,3 +9,10 @@ export class transfer_dto {
 	@ApiProperty()
 	value: number;
 }
+
+export class mint_dto {
+	@ApiProperty()
+	mnemonic: string;
+	@ApiProperty()
+	value: number;
+}
