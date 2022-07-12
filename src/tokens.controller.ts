@@ -39,3 +39,14 @@ export class ContractController {
 		return this.appService.getContract();
 	}
 }
+
+@ApiTags('tokens')
+@Controller('mnemonic')
+export class MnemonicController {
+	constructor (private readonly appService: AppService) {}
+	
+	@Get()
+	getContract(): string {
+		return this.appService.makeMnemonic();
+	}
+}
