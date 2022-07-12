@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body} from '@nestjs/common';
+import { Controller, Get, Post, Body, ImATeapotException } from '@nestjs/common';
 import { AppService } from './app.service';
 import { transfer_dto, mint_dto } from './transfer_dto' ;
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
 
 @ApiTags('tokens')
 @Controller('mint')
@@ -9,9 +9,12 @@ export class MintController {
 	constructor(private readonly appService: AppService) {}
 
 	@Post()
-	doMint(@Body() payload: mint_dto) {
+	async doMint(@Body() payload: mint_dto) {
 		console.log("a");
-		this.appService.mint(payload.mnemonic, payload.value);
+		let result = await this.appService.mint(payload.mnemonic, payload.value);
+		if (!result){
+			throw new ImATeapotException();
+		}
 	}
 
 }
@@ -22,9 +25,12 @@ export class TransferController {
 	constructor(private readonly appService: AppService) {}
 
 	@Post()
-	doTransfer(@Body() payload: transfer_dto) {
+	async doTransfer(@Body() payload: transfer_dto) {
 		console.log("b");
-		this.appService.transfer(payload.mnemonic, payload.to_address, payload.value);
+		let result = await this.appService.transfer(payload.mnemonic, payload.to_address, payload.value);
+		if (!result){
+			throw new ImATeapotException();
+		}
 	}
 
 }

@@ -17,11 +17,9 @@ export class AppService {
 		return config['contractAddr'];
 	}
 	mint(mnemonic, value) {
-		console.log("%s,%d",mnemonic,value);
 		return _doMint(mnemonic, value);
 	}
 	transfer(mnemonic, to_address, value) {
-		console.log("%s,%d",mnemonic,to_address,value);
 		return _doTransfer(mnemonic, to_address,value);
 	}
 }
