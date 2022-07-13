@@ -75,10 +75,7 @@ function _doMint(my_mnemonic, value): Promise<boolean> {
 			return false;
 		}
 
-		return mycontract.decimals().catch(() => {
-			console.log("could not successfuly connect to the contract");
-			return false;
-		}).then((x) => {
+		return mycontract.decimals().then((x) => {
 			console.log("contract decimals %d", x);
 		
 			if (typeof(value) != "number" || value < 0){
@@ -88,13 +85,16 @@ function _doMint(my_mnemonic, value): Promise<boolean> {
 	
 			let cvt_amount = ethers.utils.parseUnits(value.toString(), x);
 
-			return mycontract.mint(wallet.address, cvt_amount).catch(() => {
-				console.log("mint unsuccessful");
-				return false;
-			}).then(() => {
+			return mycontract.mint(wallet.address, cvt_amount).then(() => {
 				console.log("mint success");
 				return true;
+			}).catch(() => {
+				console.log("mint unsuccessful");
+				return false;
 			})
+		}).catch(() => {
+			console.log("could not successfuly connect to the contract");
+			return false;
 		})
 	})
 }
@@ -127,10 +127,7 @@ function _doTransfer(my_mnemonic, to_address, value): Promise<boolean> {
 			return false;
 		}
 
-		return mycontract.decimals().catch(() => {
-			console.log("could not successfuly connect to the contract");
-			return false;
-		}).then((x) => {
+		return mycontract.decimals().then((x) => {
 			console.log("contract decimals %d", x);
 		
 			if (typeof(value) != "number" || value < 0){
@@ -140,13 +137,16 @@ function _doTransfer(my_mnemonic, to_address, value): Promise<boolean> {
 	
 			let cvt_amount = ethers.utils.parseUnits(value.toString(), x);
 
-			return mycontract._transfer(to_address, cvt_amount).catch(() => {
-				console.log("transfer unsuccessful");
-				return false;
-			}).then(() => {
+			return mycontract.transfer(to_address, cvt_amount).then(() => {
 				console.log("transfer success");
 				return true;
+			}).catch(() => {
+				console.log("transfer unsuccessful");
+				return false;
 			})
+		}).catch(() => {
+			console.log("could not successfuly connect to the contract");
+			return false;
 		})
 	})
 }
