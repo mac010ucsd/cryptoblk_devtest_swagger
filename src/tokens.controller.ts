@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, ImATeapotException } from '@nestjs/common';
 import { AppService } from './app.service';
-import { transfer_dto, mint_dto } from './transfer_dto' ;
+import { transfer_dto, mint_dto, mnemonic_dto, wallet_dto } from './transfer_dto' ;
 import { ApiTags, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
 
 @ApiTags('tokens')
@@ -27,7 +27,8 @@ export class TransferController {
 	@Post()
 	async doTransfer(@Body() payload: transfer_dto) {
 		console.log("b");
-		let result = await this.appService.transfer(payload.mnemonic, payload.to_address, payload.value);
+		let result = await this.appService.transfer(payload.mnemonic, 
+			payload.to_address, payload.value);
 		if (!result){
 			throw new ImATeapotException();
 		}
@@ -47,12 +48,27 @@ export class ContractController {
 }
 
 @ApiTags('tokens')
-@Controller('mnemonic')
+@Controller('generatemnemonic')
 export class MnemonicController {
 	constructor (private readonly appService: AppService) {}
 	
 	@Get()
 	getContract(): string {
 		return this.appService.makeMnemonic();
+	}
+}
+
+@ApiTags('tokens')
+@Controller('generatewallets')
+export class WalletController {
+	constructor (private readonly appService: AppService) {}
+	
+	@Post()
+	getContract(@Body() payload: mnemonic_dto): wallet_dto {
+		let res = this.appService.getWalletAtIndex(payload.mnemonic, payload.index);
+		if (res) {
+			return res;
+		} 
+		throw new ImATeapotException();
 	}
 }

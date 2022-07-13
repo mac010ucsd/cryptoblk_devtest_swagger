@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { wallet_dto } from './transfer_dto';
 const config = require('../src/config.json');
 const contractabi = require('../src/contractabi.json');
 const {ethers} = require("ethers");
@@ -16,15 +17,27 @@ export class AppService {
 		console.log(config);
 		return config['contractAddr'];
 	}
-	mint(mnemonic, value) {
+	mint(mnemonic: string, value: number): Promise<boolean>{
 		return _doMint(mnemonic, value);
 	}
-	transfer(mnemonic, to_address, value) {
+	transfer(mnemonic: string, to_address: string, value: number): Promise<boolean> {
 		return _doTransfer(mnemonic, to_address,value);
+	}
+	getWalletAtIndex(my_mnemonic: string, index: number): wallet_dto {
+		if (!validWallet(my_mnemonic)) {
+			return;
+		}
+		// default path is m/44'/60'/0'/0/0
+		const return_wallet = new wallet_dto();
+		return_wallet.path = `m/44'/60'/0'/0/${index}`;
+		const wallet_ethers = ethers.Wallet.fromMnemonic(my_mnemonic, return_wallet.path);
+		return_wallet.privatekey = wallet_ethers.privateKey;
+		return_wallet.address = wallet_ethers.address;
+		return return_wallet;
 	}
 }
 
-function validWallet(my_mnemonic) {
+function validWallet(my_mnemonic): boolean {
 	try {	
 		let wallet = ethers.Wallet.fromMnemonic(my_mnemonic);
 		return true;
@@ -33,8 +46,7 @@ function validWallet(my_mnemonic) {
 	}
 }
 
-
-function _doMint(my_mnemonic, value) {
+function _doMint(my_mnemonic, value): Promise<boolean> {
 	let provider = new ethers.providers.JsonRpcProvider(config['provider']);
 	
 	// see if the provider is valid, if it is invalid return false.
@@ -86,7 +98,7 @@ function _doMint(my_mnemonic, value) {
 	})
 }
 
-function _doTransfer(my_mnemonic, to_address, value) {
+function _doTransfer(my_mnemonic, to_address, value): Promise<boolean> {
 	let provider = new ethers.providers.JsonRpcProvider(config['provider']);
 	
 	// see if the provider is valid, if it is invalid return false.
