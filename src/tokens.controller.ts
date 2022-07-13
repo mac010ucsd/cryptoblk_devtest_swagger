@@ -10,7 +10,7 @@ export class MintController {
 
 	@Post()
 	async doMint(@Body() payload: mint_dto) {
-		console.log("a");
+		console.log("MINT REQUEST");
 		let result = await this.appService.mint(payload.mnemonic, payload.value);
 		if (!result){
 			throw new ImATeapotException();
@@ -26,7 +26,7 @@ export class TransferController {
 
 	@Post()
 	async doTransfer(@Body() payload: transfer_dto) {
-		console.log("b");
+		console.log("TRANSFER REQUEST");
 		let result = await this.appService.transfer(payload.mnemonic, 
 			payload.to_address, payload.value);
 		if (!result){
@@ -43,6 +43,7 @@ export class ContractController {
 	
 	@Get()
 	getContract(): string {
+		console.log("GETCONTRACT REQUEST");
 		return this.appService.getContract();
 	}
 }
@@ -54,6 +55,7 @@ export class MnemonicController {
 	
 	@Get()
 	getContract(): string {
+		console.log("MNEMONIC GEN REQUEST");
 		return this.appService.makeMnemonic();
 	}
 }
@@ -65,6 +67,7 @@ export class WalletController {
 	
 	@Post()
 	getContract(@Body() payload: mnemonic_dto): wallet_dto {
+		console.log("WALLET GEN REQUEST");
 		let res = this.appService.getWalletAtIndex(payload.mnemonic, payload.index);
 		if (res) {
 			return res;

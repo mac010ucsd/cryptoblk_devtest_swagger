@@ -4,7 +4,7 @@ DSTT API using NestJS, Swagger, Ethers.
 
 ## Setup
 
-All packages must be installed before use
+All packages must be installed before use.
 
 ```bash
 $ npm install
@@ -16,4 +16,4 @@ $ npm install
 $ npm run start
 ```
 
-The server will be hosted at ```localhost:3000```, the swagger page can be found at ```localhost:3000/api```
+The server will be hosted at ```localhost:3000```, the swagger page can be found at ```localhost:3000/api```. The user can view how the API should be used on the swagger page.
