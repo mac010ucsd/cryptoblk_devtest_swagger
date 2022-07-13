@@ -16,7 +16,6 @@ export class MintController {
 			throw new ImATeapotException();
 		}
 	}
-
 }
 
 @ApiTags('tokens')
