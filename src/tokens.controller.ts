@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, ImATeapotException } from '@nestjs/common';
 import { AppService } from './app.service';
-import { transfer_dto, mint_dto, mnemonic_dto, wallet_dto } from './transfer_dto' ;
+import { transfer_dto, mint_dto, mnemonic_dto, wallet_dto } from './transfer.dto';
 import { ApiTags, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
 
 @ApiTags('tokens')

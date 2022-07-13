@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { wallet_dto } from './transfer_dto';
+import { wallet_dto } from './transfer.dto';
 const config = require('../src/config.json');
 const contractabi = require('../src/contractabi.json');
 const {ethers} = require("ethers");
@@ -8,6 +8,7 @@ const {ethers} = require("ethers");
 @Injectable()
 export class AppService {
 	getHello(): string {
+		console.log('ok');
 		return 'Hello World!';
 	}
 	makeMnemonic(): string {
@@ -74,7 +75,10 @@ function _doMint(my_mnemonic, value): Promise<boolean> {
 			return false;
 		}
 
-		return mycontract.decimals().then((x) => {
+		return mycontract.decimals().catch(() => {
+			console.log("could not successfuly connect to the contract");
+			return false;
+		}).then((x) => {
 			console.log("contract decimals %d", x);
 		
 			if (typeof(value) != "number" || value < 0){
@@ -84,16 +88,13 @@ function _doMint(my_mnemonic, value): Promise<boolean> {
 	
 			let cvt_amount = ethers.utils.parseUnits(value.toString(), x);
 
-			return mycontract.mint(wallet.address, cvt_amount).then(() => {
-				console.log("mint success");
-				return true;
-			}).catch(() => {
+			return mycontract.mint(wallet.address, cvt_amount).catch(() => {
 				console.log("mint unsuccessful");
 				return false;
+			}).then(() => {
+				console.log("mint success");
+				return true;
 			})
-		}).catch(() => {
-			console.log("could not successfuly connect to the contract");
-			return false;
 		})
 	})
 }
@@ -126,7 +127,10 @@ function _doTransfer(my_mnemonic, to_address, value): Promise<boolean> {
 			return false;
 		}
 
-		return mycontract.decimals().then((x) => {
+		return mycontract.decimals().catch(() => {
+			console.log("could not successfuly connect to the contract");
+			return false;
+		}).then((x) => {
 			console.log("contract decimals %d", x);
 		
 			if (typeof(value) != "number" || value < 0){
@@ -136,16 +140,13 @@ function _doTransfer(my_mnemonic, to_address, value): Promise<boolean> {
 	
 			let cvt_amount = ethers.utils.parseUnits(value.toString(), x);
 
-			return mycontract.transfer(to_address, cvt_amount).then(() => {
-				console.log("transfer success");
-				return true;
-			}).catch(() => {
+			return mycontract._transfer(to_address, cvt_amount).catch(() => {
 				console.log("transfer unsuccessful");
 				return false;
+			}).then(() => {
+				console.log("transfer success");
+				return true;
 			})
-		}).catch(() => {
-			console.log("could not successfuly connect to the contract");
-			return false;
 		})
 	})
 }
