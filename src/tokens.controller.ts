@@ -32,7 +32,6 @@ export class TransferController {
 			throw new ImATeapotException();
 		}
 	}
-
 }
 
 @ApiTags('tokens')
