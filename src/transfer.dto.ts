@@ -34,3 +34,8 @@ export class wallet_dto {
 	@ApiProperty()
 	path: string;
 }
+
+export class accountBalanceGetterDto {
+	@ApiProperty()
+	address: string;
+}

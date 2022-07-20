@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, ImATeapotException } from '@nestjs/common';
 import { AppService } from './app.service';
-import { transfer_dto, mint_dto, mnemonic_dto, wallet_dto } from './transfer.dto';
+import { transfer_dto, mint_dto, mnemonic_dto, wallet_dto, accountBalanceGetterDto } from './transfer.dto';
 import { ApiTags, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
 
 @ApiTags('tokens')
@@ -71,5 +71,22 @@ export class WalletController {
 			return res;
 		} 
 		throw new ImATeapotException();
+	}
+}
+
+@ApiTags('tokens')
+@Controller('gettokenbalance')
+export class TokenBalanceController {
+	constructor (private readonly appService: AppService) {}
+
+	@Post()
+	async getAddressBalance(@Body() body : accountBalanceGetterDto) {
+		console.log(body);
+		try {
+			let res = await this.appService.getAddressBalance(body.address);
+			return res;
+		} catch {
+			throw new ImATeapotException();
+		}
 	}
 }

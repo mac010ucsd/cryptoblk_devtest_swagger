@@ -24,6 +24,9 @@ export class AppService {
 	transfer(mnemonic: string, to_address: string, value: number): Promise<boolean> {
 		return _doTransfer(mnemonic, to_address,value);
 	}
+	getAddressBalance(address: string): Promise<string> {
+		return _getAddressBalance(address);
+	}
 	getWalletAtIndex(my_mnemonic: string, index: number): wallet_dto {
 		if (!validWallet(my_mnemonic)) {
 			return;
@@ -149,4 +152,22 @@ function _doTransfer(my_mnemonic, to_address, value): Promise<boolean> {
 			return false;
 		})
 	})
+}
+
+async function _getAddressBalance(address: string) {
+    // we need a provider
+	const provider = new ethers.providers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
+
+    // a signer (wallet)
+    let mywallet = ethers.Wallet.createRandom();
+    //let mywallet = new ethers.Wallet(privateKey);
+    mywallet = mywallet.connect(provider);
+
+    // a contract, its address, an ABI
+    const contractAddress = "0x715696b3aea58920e1f5a4cf161e843405d2d384";
+    const contractAbi = contractabi.result;
+    const contract = new ethers.Contract(contractAddress, contractAbi, mywallet);
+    //"0x1b9dcd80ff80292b516ab5a0bb9fb189a65182c1"
+    const balance = await contract.balanceOf(address)
+    return balance.toString();
 }
